@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>D45W 聯盟</title>
+  <meta name="description" content="Last War：Survival 伺服器 2134 · D45W 聯盟網站">
+  <meta name="theme-color" content="#030a1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- 全站字型：Russo One、Chakra Petch、Noto Sans TC（合併成一條） -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@500;600;700&family=Noto+Sans+TC:wght@500;700;900&display=swap">
+  <!-- 首頁 V2 樣式 -->
+  <link rel="stylesheet" href="css/home.css">
+  <!-- 開場動畫樣式 -->
+  <link rel="stylesheet" href="css/intro.css">
+</head>
+<body>
+
+<!-- 這一行讓開場畫面顯示；放在 <body> 最前面 -->
+<script>document.documentElement.classList.add('d45w-intro-on','d45w-lock');</script>
+
+<!-- =================== D45W 開場動畫：HTML =================== -->
+<div class="d45w-intro" id="d45w-intro" role="dialog" aria-modal="true" aria-label="D45W 歡迎開場">
+  <div class="d45w-bgfx" id="d45w-bgfx" aria-hidden="true">
+    <div class="d45w-hex"></div>
+    <div class="d45w-radar"></div>
+    <div class="d45w-grid"></div>
+    <div class="d45w-scan"></div>
+  </div>
+
+  <div class="d45w-hud" aria-hidden="true">
+    <span class="d45w-corner tl"></span><span class="d45w-corner tr"></span>
+    <span class="d45w-corner bl"></span><span class="d45w-corner br"></span>
+    <span class="d45w-tag tl"><span class="d45w-live"></span>SRV 2134</span>
+    <span class="d45w-tag bl">D45W // ALLIANCE</span>
+    <span class="d45w-tag br">LINK<span class="d45w-signal"><i></i><i></i><i></i><i></i></span></span>
+    <span class="d45w-ruler l"></span><span class="d45w-ruler r"></span>
+  </div>
+
+  <button type="button" class="d45w-skip" id="d45w-skip">跳過 ›</button>
+
+  <div class="d45w-stage">
+    <div class="d45w-brand">
+      <div class="d45w-emblem">
+        <svg viewBox="0 0 210 112" aria-hidden="true">
+          <g class="ring"><circle cx="105" cy="56" r="54"/></g>
+          <path class="wing" d="M42 56H8M30 46l-10 10 10 10M168 56h34M180 46l10 10-10 10"/>
+          <polygon class="hex" points="105,8 152,32 152,80 105,104 58,80 58,32"/>
+          <polygon class="hex-in" points="105,17 144,37 144,75 105,95 66,75 66,37"/>
+        </svg>
+        <p class="d45w-logo">D45W</p>
+      </div>
+      <span class="d45w-sub">LAST WAR：SURVIVAL</span>
+    </div>
+
+    <section class="d45w-panel" aria-label="登入確認">
+      <div class="d45w-panel-fx"></div>
+      <div class="d45w-panel-head">
+        <p class="d45w-panel-title">聯盟登入確認</p>
+        <span class="d45w-panel-line"></span>
+        <span class="d45w-count" id="d45w-count">0/3</span>
+      </div>
+      <ol class="d45w-steps" id="d45w-steps"></ol>
+    </section>
+
+    <p class="d45w-welcome" aria-live="polite"><span id="d45w-welcome-text"></span><span class="d45w-caret" aria-hidden="true"></span></p>
+
+    <button type="button" class="d45w-enter" id="d45w-enter">進入</button>
+  </div>
+</div>
+<!-- =================== 開場動畫 HTML 結束 =================== -->
+
+
+<!-- =================== D45W 首頁 V2：HTML =================== -->
+<!-- 共用漸層（SVG 程式繪製） -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="goldStroke" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff0b8"/><stop offset=".4" stop-color="#f2c45a"/><stop offset="1" stop-color="#8a5a12"/>
+    </linearGradient>
+    <linearGradient id="goldText" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffbe8"/><stop offset=".48" stop-color="#ffe08a"/><stop offset=".55" stop-color="#e2a83a"/><stop offset="1" stop-color="#b57615"/>
+    </linearGradient>
+    <radialGradient id="hexFill" cx=".5" cy=".35" r=".7">
+      <stop offset="0" stop-color="#1f4aa0"/><stop offset="1" stop-color="#061433"/>
+    </radialGradient>
+    <linearGradient id="sweepGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6fd6ff" stop-opacity="0"/><stop offset=".5" stop-color="#6fd6ff" stop-opacity=".45"/><stop offset="1" stop-color="#6fd6ff" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="hexClip"><polygon points="50,15 81,32 81,68 50,85 19,68 19,32"/></clipPath>
+  </defs>
+</svg>
+
+<!-- 背景特效與螢幕框 -->
+<div class="bgfx" aria-hidden="true">
+  <div class="bg-grid"></div>
+  <div class="bg-radar"></div>
+  <div class="bg-floor"></div>
+  <div class="bg-scan"></div>
+  <div class="bg-noise"></div>
+</div>
+<div class="hud" aria-hidden="true">
+  <span class="hud-c tl"></span><span class="hud-c tr"></span><span class="hud-c bl"></span><span class="hud-c br"></span>
+  <span class="hud-r l"></span><span class="hud-r r"></span>
+</div>
+
+<div id="d45w-home">
+
+  <!-- 頂部：D45W 標誌（點擊觸發吉祥物彩蛋） -->
+  <header class="top">
+    <button type="button" class="logo-btn" id="logo-btn" aria-label="D45W">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <g class="lg-ring2"><circle cx="50" cy="50" r="48"/></g>
+        <g class="lg-ring"><circle cx="50" cy="50" r="43"/></g>
+        <path class="lg-tick" d="M50 0v6M50 94v6M0 50h6M94 50h6"/>
+        <polygon class="lg-hex" points="50,15 81,32 81,68 50,85 19,68 19,32"/>
+        <g clip-path="url(#hexClip)"><rect class="lg-sweep" x="10" y="20" width="80" height="14" fill="url(#sweepGrad)"/></g>
+        <polygon class="lg-hex-in" points="50,21 76,35 76,65 50,79 24,65 24,35"/>
+        <text class="lg-text" x="50" y="57.5" text-anchor="middle">D45W</text>
+      </svg>
+    </button>
+    <div class="top-info">
+      <span class="srv"><span class="live"></span>SERVER <b>2134</b><span class="sig"><i></i><i></i><i></i><i></i></span></span>
+      <span class="seg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      <span class="cmd">ALLIANCE COMMAND CENTER</span>
+    </div>
+  </header>
+
+  <!-- 聯盟精神輪播 -->
+  <section class="spirit" aria-label="聯盟精神" aria-roledescription="輪播">
+    <span class="spirit-frame" aria-hidden="true"></span>
+    <span class="spirit-tag">D45W SPIRIT</span>
+    <button type="button" class="spirit-arrow" id="spirit-prev" aria-label="上一句">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2L4 8l6 6"/></svg>
+    </button>
+    <div class="spirit-body" id="spirit-body" aria-live="polite">
+      <span class="spirit-main" id="spirit-main"></span>
+      <span class="spirit-sub" id="spirit-sub"></span>
+    </div>
+    <button type="button" class="spirit-arrow" id="spirit-next" aria-label="下一句">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2l6 6-6 6"/></svg>
+    </button>
+    <div class="spirit-prog" id="spirit-prog" aria-hidden="true"></div>
+  </section>
+
+  <!-- 四個主要功能 -->
+  <h2 class="sec-head"><span>主要功能 / MAIN</span></h2>
+  <nav class="main-grid" aria-label="主要功能">
+    <a class="mod" id="btn-tips" data-link="tips" href="#" target="_blank" rel="noopener">
+      <span class="mod-face" style="--sd:0s">
+        <span class="mod-br a"></span><span class="mod-br b"></span>
+        <span class="mod-id">M-01</span>
+        <span class="mod-chip" data-chip>連結尚未設定</span>
+        <span class="mod-icon">
+          <svg class="ring" viewBox="0 0 62 62" aria-hidden="true"><polygon points="31,2 56,16.5 56,45.5 31,60 6,45.5 6,16.5"/></svg>
+          <svg class="glyph" viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="12" width="32" height="18" rx="9"/><path d="M12 17v8M8 21h8"/><circle cx="26" cy="19" r="1.6"/><circle cx="30" cy="23" r="1.6"/></svg>
+        </span>
+        <span class="mod-title">操作技巧</span>
+        <span class="mod-en">CONTROLS</span>
+      </span>
+    </a>
+    <a class="mod" id="btn-notice" data-link="notice" href="#" target="_blank" rel="noopener">
+      <span class="mod-face" style="--sd:1.4s">
+        <span class="mod-br a"></span><span class="mod-br b"></span>
+        <span class="mod-id">M-02</span>
+        <span class="mod-chip" data-chip>連結尚未設定</span>
+        <span class="mod-icon">
+          <svg class="ring" viewBox="0 0 62 62" aria-hidden="true"><polygon points="31,2 56,16.5 56,45.5 31,60 6,45.5 6,16.5"/></svg>
+          <svg class="glyph" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 16v8h6l13 7V9L12 16z"/><path d="M12 24l2 8h4l-2-7"/><path d="M30 15a7 7 0 010 10"/></svg>
+        </span>
+        <span class="mod-title">聯盟公告圖</span>
+        <span class="mod-en">NOTICE</span>
+      </span>
+    </a>
+    <button type="button" class="mod" data-menu="events" aria-haspopup="dialog">
+      <span class="mod-face" style="--sd:2.8s">
+        <span class="mod-br a"></span><span class="mod-br b"></span>
+        <span class="mod-id">M-03</span>
+        <span class="mod-chip menu">選單 13</span>
+        <span class="mod-icon">
+          <svg class="ring" viewBox="0 0 62 62" aria-hidden="true"><polygon points="31,2 56,16.5 56,45.5 31,60 6,45.5 6,16.5"/></svg>
+          <svg class="glyph" viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(45 20 20)"><path d="M20 2.5l2.6 4.5v17.5h-5.2V7z"/><path d="M13 25h14M20 25v7"/><circle cx="20" cy="34.3" r="1.8"/></g><g transform="rotate(-45 20 20)"><path d="M20 2.5l2.6 4.5v17.5h-5.2V7z"/><path d="M13 25h14M20 25v7"/><circle cx="20" cy="34.3" r="1.8"/></g></svg>
+        </span>
+        <span class="mod-title">常規活動</span>
+        <span class="mod-en">EVENTS</span>
+      </span>
+    </button>
+    <button type="button" class="mod" data-menu="seasons" aria-haspopup="dialog">
+      <span class="mod-face" style="--sd:4.2s">
+        <span class="mod-br a"></span><span class="mod-br b"></span>
+        <span class="mod-id">M-04</span>
+        <span class="mod-chip menu">選單 8</span>
+        <span class="mod-icon">
+          <svg class="ring" viewBox="0 0 62 62" aria-hidden="true"><polygon points="31,2 56,16.5 56,45.5 31,60 6,45.5 6,16.5"/></svg>
+          <svg class="glyph" viewBox="0 0 40 40" aria-hidden="true"><path d="M12 6h16v9a8 8 0 01-16 0z"/><path d="M12 9H6v3a6 6 0 006 6M28 9h6v3a6 6 0 01-6 6"/><path d="M20 23v6M13 34h14M15 34l2-5h6l2 5"/></svg>
+        </span>
+        <span class="mod-title">賽季專區</span>
+        <span class="mod-en">SEASONS</span>
+      </span>
+    </button>
+  </nav>
+
+  <!-- 聯盟資訊入口 -->
+  <h2 class="sec-head"><span>聯盟資訊 / INFO</span></h2>
+  <div class="info-list">
+    <button type="button" class="info-btn" data-page="alliance-rules">
+      <span class="info-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span>
+      <span class="t">聯盟規範</span><span class="s">獨立頁面</span>
+      <svg class="go" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 2l5 5-5 5"/></svg>
+    </button>
+    <button type="button" class="info-btn" data-page="server-rules">
+      <span class="info-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h.01M7 17h.01M11 7h6M11 17h6"/></svg></span>
+      <span class="t">伺服器規範</span><span class="s">獨立頁面</span>
+      <svg class="go" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 2l5 5-5 5"/></svg>
+    </button>
+    <a class="info-btn" id="btn-other" data-link="otherGuides" href="#" target="_blank" rel="noopener">
+      <span class="info-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg></span>
+      <span class="t">其他攻略網站</span><span class="s off" data-chip>連結尚未設定</span>
+      <svg class="go" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 2l5 5-5 5"/></svg>
+    </a>
+  </div>
+
+  <footer class="foot">
+    本站內容由 D45W 管理群蒐集整理，僅供參考。請依個人實際遊戲狀況自行判斷。
+    <small>D45W · SERVER 2134</small>
+  </footer>
+</div>
+
+<!-- 彈出選單 -->
+<div class="sheet-wrap" id="sheet-wrap" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="sheet-in">
+      <div class="sheet-head">
+        <h2 class="sheet-title" id="sheet-title"></h2>
+        <button type="button" class="x-btn" id="sheet-close" aria-label="關閉選單">
+          <svg viewBox="0 0 18 18"><path d="M3 3l12 12M15 3L3 15"/></svg>
+        </button>
+      </div>
+      <ul class="sheet-list" id="sheet-list"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- 佔位頁面（預覽用：日後換成真正的獨立頁面） -->
+<div class="ph" id="ph" hidden role="dialog" aria-modal="true" aria-labelledby="ph-title">
+  <div class="ph-in">
+    <button type="button" class="back-btn" id="ph-back">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2L4 8l6 6"/></svg>返回首頁
+    </button>
+    <span class="ph-cat" id="ph-cat"></span>
+    <h1 class="ph-title" id="ph-title"></h1>
+    <div class="ph-box">
+      <b>佔位頁面</b>：這一頁的內容尚未製作。<br>
+      正式版會是獨立網頁，預定檔名：<code id="ph-file"></code>
+    </div>
+  </div>
+</div>
+
+<!-- 吉祥物彩蛋 -->
+<div class="mascot-layer" id="mascot-layer" hidden>
+  <div class="mascot-dim"></div>
+  <div class="mascot-pad"></div>
+  <div class="mascot-stage">
+    <div class="bubble" id="bubble" role="status">
+      <span id="bubble-text"></span>
+      <button type="button" class="bubble-close" id="bubble-close" aria-label="關閉吉祥物">
+        <svg viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12"/></svg>
+      </button>
+    </div>
+    <button type="button" class="mascot-btn" id="mascot-btn" aria-label="點一下讓吉祥物離開">
+      <img id="mascot-img" alt="D45W 吉祥物" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=">
+      <span class="spark" style="left:6%;top:18%;--d:.55s"></span>
+      <span class="spark" style="right:4%;top:8%;--d:.75s"></span>
+      <span class="spark" style="left:16%;top:52%;--d:.95s;width:9px;height:9px"></span>
+      <span class="spark" style="right:12%;top:46%;--d:1.1s;width:9px;height:9px"></span>
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<!-- =================== 首頁 V2 HTML 結束 =================== -->
+
+<!-- 首頁 V2 程式（管理者設定區在 js/home.js 最上方） -->
+<script src="js/home.js"></script>
+<!-- 開場動畫程式 -->
+<script src="js/intro.js"></script>
+</body>
+</html>
